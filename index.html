@@ -525,5 +525,19 @@
   }, { threshold: 0.35 });
   sections.forEach(s=>navIo.observe(s));
 </script>
+<script>
+  // Gỡ hoàn toàn cơ chế lật 3D trước khi in, tránh chữ bị soi gương trong PDF
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.classList.add('print-mode');
+      card.classList.remove('flipped'); // đảm bảo không giữ trạng thái đã lật
+    });
+  });
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.classList.remove('print-mode');
+    });
+  });
+</script>
 </body>
 </html>
