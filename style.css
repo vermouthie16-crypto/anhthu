@@ -368,34 +368,26 @@ footer .heart {
   }
 }
 @media print {
-  /* Tắt hiệu ứng lật 3D khi in để tránh bị soi gương / lật ngược */
-  .flip-card{
-    height: auto;
-    perspective: none;
+  .blob, #sticker-layer, .cursor-glow { display: none !important; }
+  nav { position: static !important; }
+
+  .flip-card.print-mode {
+    height: auto !important;
+    perspective: none !important;
   }
-  .flip-inner{
-    position: relative;
+  .flip-card.print-mode .flip-inner {
+    position: static !important;
     transform: none !important;
     transition: none !important;
-    height: auto;
+    transform-style: flat !important;
+    height: auto !important;
   }
-  .flip-face{
-    position: relative;      /* thay vì absolute inset:0 */
-    backface-visibility: visible;
-    transform: none !important;
-    height: auto;
-    margin-bottom: 14px;
-    page-break-inside: avoid;
-  }
-  .flip-back{
-    transform: none !important;
-  }
-
-  /* Bonus: tránh các phần tử nền/hiệu ứng gây lỗi trang trắng hoặc đè chữ khi in */
-  .blob, #sticker-layer, .cursor-glow{
-    display: none !important;
-  }
-  nav{
+  .flip-card.print-mode .flip-face {
     position: static !important;
+    transform: none !important;
+    backface-visibility: visible !important;
+    height: auto !important;
+    margin-bottom: 12px;
+    page-break-inside: avoid;
   }
 }
