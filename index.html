@@ -249,6 +249,22 @@
     .nav-links{ flex-wrap: wrap; justify-content: center; }
     .tab-panel{ padding: 26px 22px; }
   }
+
+  /* ===== IN PDF — tắt hiệu ứng lật 3D để tránh chữ bị lật ngược ===== */
+  @media print{
+    .blob, #sticker-layer, .cursor-glow{ display: none !important; }
+    nav{ position: static !important; }
+
+    .flip-card{ height: auto !important; perspective: none !important; }
+    .flip-inner{
+      position: static !important; transform: none !important; transition: none !important;
+      transform-style: flat !important; height: auto !important;
+    }
+    .flip-face{
+      position: static !important; transform: none !important; backface-visibility: visible !important;
+      height: auto !important; margin-bottom: 12px !important; page-break-inside: avoid;
+    }
+  }
 </style>
 </head>
 <body>
@@ -526,18 +542,46 @@
   sections.forEach(s=>navIo.observe(s));
 </script>
 <script>
-  // Gỡ hoàn toàn cơ chế lật 3D trước khi in, tránh chữ bị soi gương trong PDF
-  window.addEventListener('beforeprint', () => {
+  // Gỡ hoàn toàn cơ chế lật 3D khi in, ép inline-style trực tiếp
+  // (không phụ thuộc CSS @media print, tránh trường hợp CSS chưa kịp áp dụng)
+  function prepareFlipCardsForPrint() {
     document.querySelectorAll('.flip-card').forEach(card => {
-      card.classList.add('print-mode');
-      card.classList.remove('flipped'); // đảm bảo không giữ trạng thái đã lật
+      const inner = card.querySelector('.flip-inner');
+      const front = card.querySelector('.flip-front');
+      const back  = card.querySelector('.flip-back');
+
+      card.classList.remove('flipped');
+      card.style.height = 'auto';
+
+      inner.style.transform = 'none';
+      inner.style.transition = 'none';
+      inner.style.position = 'static';
+      inner.style.height = 'auto';
+
+      [front, back].forEach(face => {
+        face.style.position = 'static';
+        face.style.transform = 'none';
+        face.style.height = 'auto';
+        face.style.marginBottom = '14px';
+      });
     });
-  });
-  window.addEventListener('afterprint', () => {
+  }
+
+  function restoreFlipCardsAfterPrint() {
     document.querySelectorAll('.flip-card').forEach(card => {
-      card.classList.remove('print-mode');
+      const inner = card.querySelector('.flip-inner');
+      const front = card.querySelector('.flip-front');
+      const back  = card.querySelector('.flip-back');
+
+      card.removeAttribute('style');
+      inner.removeAttribute('style');
+      front.removeAttribute('style');
+      back.removeAttribute('style');
     });
-  });
+  }
+
+  window.addEventListener('beforeprint', prepareFlipCardsForPrint);
+  window.addEventListener('afterprint', restoreFlipCardsAfterPrint);
 </script>
 </body>
 </html>
