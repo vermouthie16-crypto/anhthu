@@ -371,18 +371,20 @@ footer .heart {
   .blob, #sticker-layer, .cursor-glow { display: none !important; }
   nav { position: static !important; }
 
-  .flip-card.print-mode {
+  /* Áp dụng trực tiếp lên .flip-card, không phụ thuộc class print-mode do JS gắn,
+     để CSS vẫn có tác dụng ngay cả khi không có JS đi kèm trang này */
+  .flip-card {
     height: auto !important;
     perspective: none !important;
   }
-  .flip-card.print-mode .flip-inner {
+  .flip-inner {
     position: static !important;
     transform: none !important;
     transition: none !important;
     transform-style: flat !important;
     height: auto !important;
   }
-  .flip-card.print-mode .flip-face {
+  .flip-face {
     position: static !important;
     transform: none !important;
     backface-visibility: visible !important;
